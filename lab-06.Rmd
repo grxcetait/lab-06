@@ -29,8 +29,42 @@ diamonds <- diamonds %>% rename(
 ```{r}
 # Do some preliminary investigations & cleaning
 
+view(diamonds)
 
+diamonds %>%
+  count(price)
 
+diamonds %>%
+  summary()
+
+filter(diamonds, length_mm == 0 | width_mm == 0 | depth_mm == 0)
+
+#Only keeping rows with a non-zero length
+diamonds <- subset(diamonds,
+                  length_mm > 0 & width_mm > 0 & depth_mm > 0)
+
+#Depth vs. depth %
+diamonds %>%
+  ggplot(mapping = aes(x = depth_mm,
+                       y = depth_pct)) +
+  geom_point(alpha = 0.3,
+             size = 0.5)
+
+#Width vs. depth %
+diamonds %>%
+  ggplot(mapping = aes(x = width_mm,
+                       y = depth_pct)) +
+  geom_point(alpha = 0.3,
+             size = 0.5)
+
+#Length vs. depth %
+diamonds %>%
+  ggplot(mapping = aes(x = length_mm,
+                       y = depth_pct)) +
+  geom_point(alpha = 0.1,
+             size = 0.5)
+
+#The depth and width have approximately the same relationship with depth %. However, depth % varies vastly compared to the length.
 
 ```
 
@@ -42,19 +76,21 @@ diamonds <- diamonds %>% rename(
 diamonds <- diamonds %>%
   mutate(table_mm = table_pct * width_mm / 100)
 
-# Overall table_mm arithmetic mean?
+view(diamonds)
 
+# Overall table_mm arithmetic mean
 
-
-
-
+diamonds %>%
+  summarise(mean(table_mm))
 
 # table_mm arithmetic mean within each clarity category
 
+diamonds %>%
+  select(clarity, table_mm) %>%
+  group_by(clarity) %>%
+  summarise(mean(table_mm))
 
-
-
-
+#The better the clarity, the smaller the table_mm
 
 ```
 
